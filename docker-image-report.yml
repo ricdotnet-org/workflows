@@ -1,0 +1,64 @@
+name: Dcoker image report
+
+on:
+  workflow_call:
+    inputs:
+      docker_image_status:
+        required: true
+        type: string
+      docker_image_name:
+        required: true
+        type: string
+    secrets:
+      DISCORD_WEBHOOK:
+        required: true
+
+jobs:
+  send_docker_image_report:
+    name: Send docker image report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger webhook
+        run: |
+          RESULT_ICON=""
+          RESULT_MESS=""
+
+          if [[ ${{ inputs.docker_image_status }} == "success" ]]; then
+            RESULT_ICON="✅"
+            RESULT_MESS="Success"
+          else
+            RESULT_ICON="❌"
+            RESULT_MESS="Failed"
+          fi
+
+          DATE=$(date +"%d/%m/%Y %H:%M")
+
+          curl -H "Content-Type: application/json" \
+          -X POST \
+          -d "{
+            \"embeds\": [
+              {
+                \"description\": \"> \`✅\` **Docker image report**\",
+                \"fields\": [
+                  {
+                    \"name\": \"\`📅\` Date\",
+                    \"value\": \"$DATE\",
+                    \"inline\": true
+                  },
+                  {
+                    \"name\": \"\`🗒️\` Result\",
+                    \"value\": \"$RESULT_MESS\",
+                    \"inline\": true
+                  },
+                  {
+                    \"name\": \"\`📦\` Image\",
+                    \"value\": \"\`\`\`$IMAGE\`\`\`\"
+                  }
+                ],
+                \"color\": 65344
+              }
+            ]
+          }" \
+          ${{ secrets.DISCORD_WEBHOOK }}
+
