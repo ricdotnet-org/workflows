@@ -53,7 +53,7 @@ jobs:
                   },
                   {
                     \"name\": \"\`📦\` Image\",
-                    \"value\": \"\`\`\`$IMAGE\`\`\`\"
+                    \"value\": \"\`\`\`${{ inputs.docker_image_name }}\`\`\`\"
                   }
                 ],
                 \"color\": 65344
