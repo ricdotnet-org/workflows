@@ -25,15 +25,17 @@ jobs:
     steps:
       - name: Trigger webhook
         run: |
-          RESULT_ICON=""
-          RESULT_MESS=""
+          STATUS="${{ inputs.docker_image_status }}"
           IMAGE="${{ inputs.docker_image_name }}"
           VERSION="${{ inputs.new_release_version }}"
 
-          if [[ ${{ inputs.docker_image_status }} == "success" ]]; then
+          RESULT_ICON=""
+          RESULT_MESS=""
+
+          if [[ "$STATUS" == "success" ]]; then
             RESULT_ICON="✅"
             RESULT_MESS="Success"
-          elif [[ $VERSION == "" ]]; then
+          elif [[ -z "$VERSION" ]]; then
             RESULT_ICON="❌"
             RESULT_MESS="Failed"
             IMAGE="no new image built"
@@ -48,35 +50,20 @@ jobs:
           DATE=$(date +"%d/%m/%Y %H:%M")
 
           curl -H "Content-Type: application/json" \
-          -X POST \
-          -d "{
-            \"embeds\": [
-              {
-                \"description\": \"> \`✅\` **Docker image report**\",
-                \"fields\": [
-                  {
-                    \"name\": \"\`📅\` Date\",
-                    \"value\": \"$DATE\",
-                    \"inline\": true
-                  },
-                  {
-                    \"name\": \"\`🗒️\` Result\",
-                    \"value\": \"$RESULT_MESS\",
-                    \"inline\": true
-                  },
-                  {
-                    \"name\": \"\`#️⃣\` Version\",
-                    \"value\": \"$VERSION\",
-                    \"inline\": true
-                  },
-                  {
-                    \"name\": \"\`📦\` Image\",
-                    \"value\": \"\`\`\`${{ inputs.docker_image_name }}\`\`\`\"
-                  }
-                ],
-                \"color\": 65344
-              }
-            ]
-          }" \
-          ${{ secrets.DISCORD_WEBHOOK }}
+            -X POST \
+            -d "{
+              \"embeds\": [
+                {
+                  \"description\": \"> \`$RESULT_ICON\` **Docker image report**\",
+                  \"fields\": [
+                    {\"name\": \"\`📅\` Date\", \"value\": \"$DATE\", \"inline\": true},
+                    {\"name\": \"\`🗒️\` Result\", \"value\": \"$RESULT_MESS\", \"inline\": true},
+                    {\"name\": \"\`#️⃣\` Version\", \"value\": \"$VERSION\", \"inline\": true},
+                    {\"name\": \"\`📦\` Image\", \"value\": \"\`\`\`$IMAGE\`\`\`\"}
+                  ],
+                  \"color\": 65344
+                }
+              ]
+            }" \
+            ${{ secrets.DISCORD_WEBHOOK }}
 
