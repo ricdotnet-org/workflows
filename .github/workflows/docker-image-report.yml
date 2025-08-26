@@ -33,7 +33,7 @@ jobs:
           if [[ ${{ inputs.docker_image_status }} == "success" ]]; then
             RESULT_ICON="✅"
             RESULT_MESS="Success"
-          elif [[ ${{ inputs.new_release_version }} == "" ]]; then
+          elif [[ $VERSION == "" ]]; then
             RESULT_ICON="❌"
             RESULT_MESS="Failed"
             IMAGE="no new image built"
