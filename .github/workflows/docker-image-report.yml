@@ -32,14 +32,9 @@ jobs:
           RESULT_ICON=""
           RESULT_MESS=""
 
-          if [[ "$STATUS" == "success" ]]; then
+          if [[ "$STATUS" == "success" && -n "$VERSION" ]]; then
             RESULT_ICON="✅"
             RESULT_MESS="Success"
-          elif [[ -z "$VERSION" ]]; then
-            RESULT_ICON="❌"
-            RESULT_MESS="Failed"
-            IMAGE="no new image built"
-            VERSION="N/A"
           else
             RESULT_ICON="❌"
             RESULT_MESS="Failed"
