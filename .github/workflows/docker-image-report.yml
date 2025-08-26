@@ -16,6 +16,9 @@ on:
       project:
         required: true
         type: string
+      repository:
+        required: true
+        type: string
     secrets:
       DISCORD_WEBHOOK:
         required: true
@@ -32,6 +35,7 @@ jobs:
           IMAGE="${{ inputs.docker_image_name }}"
           VERSION="${{ inputs.new_release_version }}"
           PROJECT="${{ inputs.project }}"
+          REPO="${{ inputs.repository }}"
 
           RESULT_ICON=""
           RESULT_MESS=""
@@ -58,8 +62,9 @@ jobs:
                     {\"name\": \"\`📕\` Project\", \"value\": \"\`$PROJECT\`\"},
                     {\"name\": \"\`📅\` Date\", \"value\": \"$DATE\", \"inline\": true},
                     {\"name\": \"\`🗒️\` Result\", \"value\": \"$RESULT_MESS\", \"inline\": true},
-                    {\"name\": \"\`#️⃣\` Version\", \"value\": \"$VERSION\", \"inline\": true},
-                    {\"name\": \"\`📦\` Image\", \"value\": \"\`\`\`$IMAGE\`\`\`\"}
+                    {\"name\": \"\`#️⃣\` Version\", \"value\": \"\`$VERSION\`\", \"inline\": true},
+                    {\"name\": \"\`📦\` Image\", \"value\": \"\`\`\`$IMAGE\`\`\`\"},
+                    {\"name\": \"\`🔗\` Repository\", \"value\": \"$REPO\"}
                   ],
                   \"color\": 65344
                 }
