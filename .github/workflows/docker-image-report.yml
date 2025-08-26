@@ -13,6 +13,9 @@ on:
         required: false
         type: string
         default: ""
+      project:
+        required: true
+        type: string
     secrets:
       DISCORD_WEBHOOK:
         required: true
@@ -28,6 +31,7 @@ jobs:
           STATUS="${{ inputs.docker_image_status }}"
           IMAGE="${{ inputs.docker_image_name }}"
           VERSION="${{ inputs.new_release_version }}"
+          PROJECT="${{ inputs.project }}"
 
           RESULT_ICON=""
           RESULT_MESS=""
@@ -51,6 +55,7 @@ jobs:
                 {
                   \"description\": \"> \`$RESULT_ICON\` **Docker image report**\",
                   \"fields\": [
+                    {\"name\": \"\`📕\` Project\", \"value\": \"\`$PROJECT\`\"},
                     {\"name\": \"\`📅\` Date\", \"value\": \"$DATE\", \"inline\": true},
                     {\"name\": \"\`🗒️\` Result\", \"value\": \"$RESULT_MESS\", \"inline\": true},
                     {\"name\": \"\`#️⃣\` Version\", \"value\": \"$VERSION\", \"inline\": true},
