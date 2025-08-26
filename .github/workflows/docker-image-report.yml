@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       new_release_version:
-        required: true
+        required: false
         type: string
         default: ""
     secrets:
