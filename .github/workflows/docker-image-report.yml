@@ -9,6 +9,10 @@ on:
       docker_image_name:
         required: true
         type: string
+      new_release_version:
+        required: true
+        type: string
+        default: ""
     secrets:
       DISCORD_WEBHOOK:
         required: true
@@ -23,13 +27,22 @@ jobs:
         run: |
           RESULT_ICON=""
           RESULT_MESS=""
+          IMAGE="${{ inputs.docker_image_name }}"
+          VERSION="${{ inputs.new_release_version }}"
 
           if [[ ${{ inputs.docker_image_status }} == "success" ]]; then
             RESULT_ICON="✅"
             RESULT_MESS="Success"
+          elif [[ ${{ inputs.new_release_version }} == "" ]]; then
+            RESULT_ICON="❌"
+            RESULT_MESS="Failed"
+            IMAGE="no new image built"
+            VERSION="N/A"
           else
             RESULT_ICON="❌"
             RESULT_MESS="Failed"
+            IMAGE="no new image built"
+            VERSION="N/A"
           fi
 
           DATE=$(date +"%d/%m/%Y %H:%M")
@@ -49,6 +62,11 @@ jobs:
                   {
                     \"name\": \"\`🗒️\` Result\",
                     \"value\": \"$RESULT_MESS\",
+                    \"inline\": true
+                  },
+                  {
+                    \"name\": \"\`#️⃣\` Version\",
+                    \"value\": \"$VERSION\",
                     \"inline\": true
                   },
                   {
