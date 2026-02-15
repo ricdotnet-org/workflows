@@ -39,15 +39,18 @@ jobs:
 
           RESULT_ICON=""
           RESULT_MESS=""
+          COLOR=
 
           if [[ "$STATUS" == "success" && -n "$VERSION" ]]; then
             RESULT_ICON="✅"
             RESULT_MESS="Success"
+            COLOR=65344
           else
             RESULT_ICON="❌"
             RESULT_MESS="Failed"
             IMAGE="no new image built"
             VERSION="N/A"
+            COLOR=14488596
           fi
 
           DATE=$(date +"%d/%m/%Y %H:%M")
@@ -66,7 +69,7 @@ jobs:
                     {\"name\": \"\`📦\` Image\", \"value\": \"\`\`\`$IMAGE\`\`\`\"},
                     {\"name\": \"\`🔗\` Repository\", \"value\": \"$REPO\"}
                   ],
-                  \"color\": 65344
+                  \"color\": $COLOR
                 }
               ]
             }" \
